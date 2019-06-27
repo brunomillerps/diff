@@ -1,0 +1,6 @@
+spring:
+  data.mongodb.uri: mongodb://root:MyStr0ngP4ssword2019!@localhost:27017/diff?authSource=admin&authMechanism=SCRAM-SHA-1
+---
+spring:
+  profiles: live
+  data.mongodb.uri: mongodb://root:MyStr0ngP4ssword2019!@mongo:27017/diff

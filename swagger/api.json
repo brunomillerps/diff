@@ -1,0 +1,204 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Diff Tool Application",
+    "description": "APIs REST to diff 2 previously reported content.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api"
+    }
+  ],
+  "paths": {
+    "/v1/diff/{id}/left": {
+      "post": {
+        "tags": [
+          "Persist Content"
+        ],
+        "operationId": "persistLeftContent",
+        "summary": "Persists the content to be compared later as the left side.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "An unique identifier. The application will create a document in case this ID does not exist.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EncodedBinaryData"
+        },
+        "responses": {
+          "204": {
+            "description": "the left content has been created successfully."
+          },
+          "400": {
+            "description": "A client bad formatted request was received.",
+            "content": {
+              "application/json; charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientException"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred, please contact the system's administrator.",
+            "content": {
+              "application/json; charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerException"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/diff/{id}/right": {
+      "post": {
+        "tags": [
+          "Persist Content"
+        ],
+        "operationId": "persistRightContent",
+        "summary": "Persists the content to be compared later as the right side.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "An unique identifier. The application will create a document in case this ID does not exist.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EncodedBinaryData"
+        },
+        "responses": {
+          "204": {
+            "description": "the left content has been created successfully."
+          },
+          "400": {
+            "description": "A client bad formatted request was received.",
+            "content": {
+              "application/json; charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientException"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred, please contact the system's administrator.",
+            "content": {
+              "application/json; charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerException"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/diff/{id}": {
+      "post": {
+        "tags": [
+          "Persist Content"
+        ],
+        "summary": "The previous provided data is compared",
+        "operationId": "compareObjects",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "An unique identifier. The application will create a document in case this ID does not exist.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiffOperationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "requestBodies": {
+      "EncodedBinaryData": {
+        "description": "A JSON base64 encoded binary data must be provided",
+        "required": true,
+        "content": {
+          "application/octet-stream": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "DiffOperationResponse": {
+        "type": "object",
+        "description": "A representation of the results on diff",
+        "properties": {
+          "matched": {
+            "type": "boolean",
+            "description": "Indicates files are matching.",
+            "default": true
+          },
+          "data": {
+            "type": "string",
+            "description": "A JSON representation being equal or not. In the case of equals, it will prompt the left side, otherwise a JSON schema showing where mismatch are."
+          }
+        },
+        "required": [
+          "matched",
+          "data"
+        ]
+      },
+      "ServerException": {
+        "type": "object",
+        "description": "A runtime exception",
+        "properties": {
+          "error": {
+            "format": "string",
+            "description": "More information may be given here to tell the client what have happened."
+          }
+        }
+      },
+      "ClientException": {
+        "type": "object",
+        "description": "Some information provided to the system is not complete or does not meet the system specification.",
+        "properties": {
+          "error": {
+            "format": "string",
+            "description": "More information may be given here to tell the client what have happened.",
+            "example": "A content body must be supplied."
+          }
+        }
+      }
+    }
+  }
+}
