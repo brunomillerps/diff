@@ -2,11 +2,11 @@ package com.bmps.difftool.domain;
 
 import com.bmps.difftool.exception.ClientException;
 import com.bmps.difftool.exception.DiffObjectNotFound;
+import com.bmps.difftool.infrastructure.JsonByteArrayComparatorFactory;
 import com.bmps.difftool.rest.DiffOperationResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.diff.JsonDiff;
+import com.github.difflib.algorithm.DiffException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
@@ -16,13 +16,23 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * An edge service responsible to compare 2 encoded JSON file in Base64 <br>
+ *
+ * <ul>
+ * <li>Will touch the database to get the DiffObject previously provided</li>
+ * <li>Will only perform the comparation in case both side are present</li>
+ * </ul>
+ *
+ * @author Bruno Miller
+ */
 @Component
-public class DiffObjectComparator {
+public class DiffObjectComparatorService {
 
     private final ObjectMapper mapper;
     private final MongoTemplate mongoTemplate;
 
-    public DiffObjectComparator(ObjectMapper mapper, MongoTemplate mongoTemplate) {
+    public DiffObjectComparatorService(ObjectMapper mapper, MongoTemplate mongoTemplate) {
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
     }
@@ -31,12 +41,13 @@ public class DiffObjectComparator {
      * Compares 2 previous provided files in Base64 format <br>
      * Uses {@link JsonNode} to make it human readable
      *
-     * @param diffId A UUID format ID, must not be null
+     * @param diffId   A UUID format ID, must not be null
+     * @param diffType Determines which algorithm should use to diff files
      * @return {@link DiffOperationResponse}
      * @throws ClientException
      * @throws IOException
      */
-    public DiffOperationResponse compare(UUID diffId) throws ClientException, IOException, JsonPatchException {
+    public DiffOperationResponse compare(UUID diffId, ComparatorType diffType) throws ClientException, IOException, DiffException {
 
         DiffObject diffObject = Optional.ofNullable(mongoTemplate.findById(diffId.toString(), DiffObject.class))
                 .orElseThrow(DiffObjectNotFound::new);
@@ -48,30 +59,20 @@ public class DiffObjectComparator {
             throw new ClientException().error("The right side of the comparison has an empty value, please provide one");
         }
 
+        //a full comparation: memory reference, nulls, length and byte/byte
         boolean isEqual = Arrays.equals(diffObject.getLeft(), diffObject.getRight());
-        String jsonLeft = new String(Base64.getMimeDecoder().decode(diffObject.getLeft()));
-        DiffOperationResponse response = new DiffOperationResponse().data(mapper.readValue(jsonLeft, JsonNode.class));
+        DiffOperationResponse defaultResponse =
+                new DiffOperationResponse().data(mapper.readValue(
+                        new String(Base64.getMimeDecoder().decode(diffObject.getLeft())), JsonNode.class));
 
-        if (!isEqual) {
-            JsonNode jsonDiff = compare(diffObject);
-            if (jsonDiff.size()==0) {
-                return response;
-            }
-            return new DiffOperationResponse().data(jsonDiff).matched(false);
+        if (isEqual) {
+            return defaultResponse;
         }
 
-        //just return that
-        return response;
-    }
+        DiffOperationResponse comparedResponseData = JsonByteArrayComparatorFactory
+                .createComparatorFactory(diffType)
+                .compare(diffObject.getLeft(), diffObject.getRight());
 
-    private JsonNode compare(DiffObject diffObject) throws IOException {
-        String left = new String(Base64.getMimeDecoder().decode(diffObject.getLeft()));
-        String right = new String(Base64.getMimeDecoder().decode(diffObject.getRight()));
-
-        JsonNode jsonNode1 = mapper.readValue(left, JsonNode.class);
-        JsonNode jsonNode2 = mapper.readValue(right, JsonNode.class);
-
-        //inverted source and target so that the left is the Original and we can see what have changed with incoming values.
-        return JsonDiff.asJson(jsonNode2, jsonNode1);
+        return comparedResponseData.isMatched() ? defaultResponse : comparedResponseData;
     }
 }

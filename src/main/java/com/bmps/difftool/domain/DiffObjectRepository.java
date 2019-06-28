@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
+
 @Repository
 public class DiffObjectRepository {
 
@@ -17,6 +19,7 @@ public class DiffObjectRepository {
     }
 
     public boolean createOrUpdate(DiffObject diffObject) {
+        Objects.requireNonNull(diffObject, "A diff document is required.");
 
         Query query = Query.query(Criteria.where("id").is(diffObject.getId()));
         Update update = new Update();

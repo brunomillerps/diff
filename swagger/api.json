@@ -126,6 +126,19 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "in": "query",
+            "name": "diffType",
+            "description": "Identify which diff to perform",
+            "required": false,
+            "schema": {
+              "enum": [
+                "MYER",
+                "JSON_PATCH"
+              ],
+              "default": "MYER"
+            }
           }
         ],
         "responses": {

@@ -1,7 +1,5 @@
 package com.bmps.difftool.rest;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 /**
  * A representation of the results on diff
  */
