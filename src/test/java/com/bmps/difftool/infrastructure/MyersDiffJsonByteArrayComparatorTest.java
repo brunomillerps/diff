@@ -4,8 +4,7 @@ import com.bmps.difftool.DiffProvider;
 import com.bmps.difftool.rest.DiffOperationResponse;
 import com.github.difflib.algorithm.DiffException;
 import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.Base64;
 
@@ -46,9 +45,9 @@ class MyersDiffJsonByteArrayComparatorTest {
         Assert.assertNull(diff.getData());
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void compareNullParametersShouldThrowException() throws DiffException {
         //WHEN
-        Assertions.assertThrows(NullPointerException.class, () -> myersDiffComparator.compare(null, null));
+        myersDiffComparator.compare(null, null);
     }
 }

@@ -3,8 +3,7 @@ package com.bmps.difftool.infrastructure;
 import com.bmps.difftool.DiffProvider;
 import com.bmps.difftool.rest.DiffOperationResponse;
 import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -65,10 +64,10 @@ public class JsonPatchByteArrayComparatorTest {
         Assert.assertNull(diff.getData());
     }
 
-    @Test
-    public void compareNullParametersShouldThrowException() {
+    @Test(expected = NullPointerException.class)
+    public void compareNullParametersShouldThrowException() throws IOException {
         //WHEN
-        Assertions.assertThrows(NullPointerException.class, () -> jsonPatchComparator.compare(null, null));
+        jsonPatchComparator.compare(null, null);
     }
 
 }

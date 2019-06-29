@@ -2,8 +2,7 @@ package com.bmps.difftool.infrastructure;
 
 import com.bmps.difftool.domain.ComparatorType;
 import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 class JsonByteArrayComparatorFactoryTest {
 
@@ -19,8 +18,8 @@ class JsonByteArrayComparatorFactoryTest {
         Assert.assertEquals(MyersDiffJsonByteArrayComparator.class.getSimpleName(), comparatorFactory.getClass().getSimpleName());
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     void createNullComparatorShouldThrowExceptionTest() {
-        Assertions.assertThrows(RuntimeException.class, () -> JsonByteArrayComparatorFactory.createComparatorFactory(null));
+        JsonByteArrayComparatorFactory.createComparatorFactory(null);
     }
 }

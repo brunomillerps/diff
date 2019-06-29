@@ -6,8 +6,7 @@ import com.bmps.difftool.exception.DiffObjectNotFound;
 import com.bmps.difftool.rest.DiffOperationResponse;
 import com.github.difflib.algorithm.DiffException;
 import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,25 +27,24 @@ public class DiffObjectComparatorServiceTest {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @Test
-    public void findDiffObjectDiffObjectNotFoundTest() {
+    @Test(expected = DiffObjectNotFound.class)
+    public void findDiffObjectDiffObjectNotFoundTest() throws DiffException, ClientException, IOException {
         //THEN
-        Assertions.assertThrows(DiffObjectNotFound.class, () -> diffService.compare(UUID.randomUUID(), ComparatorType.MYER));
+        diffService.compare(UUID.randomUUID(), ComparatorType.MYER);
     }
 
-    @Test
-    public void findDiffObjectLeftSideIsNullTest() {
+    @Test(expected = ClientException.class)
+    public void findDiffObjectLeftSideIsNullTest() throws DiffException, ClientException, IOException {
 
         //GIVEN
         UUID id = UUID.randomUUID();
         DiffObject diffObject = new DiffObject().withId(id.toString());
         mongoTemplate.save(diffObject, "diff_objects");
-
-        Assertions.assertThrows(ClientException.class, () -> diffService.compare(id, ComparatorType.MYER));
+        diffService.compare(id, ComparatorType.MYER);
     }
 
-    @Test
-    public void findDiffObjectRightSideIsNullTest() {
+    @Test(expected = ClientException.class)
+    public void findDiffObjectRightSideIsNullTest() throws DiffException, ClientException, IOException {
         //GIVEN
         UUID id = UUID.randomUUID();
         DiffObject diffObject =
@@ -57,8 +55,8 @@ public class DiffObjectComparatorServiceTest {
 
         mongoTemplate.save(diffObject, "diff_objects");
 
-        //WHEN~THEN
-        Assertions.assertThrows(ClientException.class, () -> diffService.compare(id, ComparatorType.MYER));
+        //WHEN/THEN
+        diffService.compare(id, ComparatorType.MYER);
     }
 
     @Test

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Api(value = "v1", description = "APIs REST to diff 2 previously reported content", basePath = "/api")
-@RestController("/api")
+@RestController
 public class DiffController {
 
     private final DiffObjectRepository diffObjectRepository;
@@ -26,27 +26,24 @@ public class DiffController {
         this.diffObjectComparatorService = diffObjectComparatorService;
     }
 
-    @PostMapping(value = "/v1/diff/{id}/left", produces = {"application/json"}, consumes = {"application/octet-stream"})
-    ResponseEntity<Void> persistLeftContent(@RequestBody byte[] leftObject,
-                                            @PathVariable("id") UUID id) {
+    @PostMapping(value = "/api/v1/diff/{id}/left", produces = {"application/json"}, consumes = {"application/octet-stream"})
+    ResponseEntity<Void> persistLeftContent(@RequestBody byte[] leftObject, @PathVariable("id") UUID id) {
 
         diffObjectRepository.createOrUpdate(new DiffObject().withId(id.toString()).withLeft(leftObject));
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping(value = "/v1/diff/{id}/right", consumes = {"application/octet-stream"})
-    ResponseEntity<Void> persistRightContent(@RequestBody byte[] rightObject,
-                                             @PathVariable("id") UUID id) {
+    @PostMapping(value = "/api/v1/diff/{id}/right", consumes = {"application/octet-stream"})
+    ResponseEntity<Void> persistRightContent(@RequestBody byte[] rightObject, @PathVariable("id") UUID id) {
 
         diffObjectRepository.createOrUpdate(new DiffObject().withId(id.toString()).withRight(rightObject));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping(value = "/v1/diff/{id}", produces = {"application/json"})
+    @PostMapping(value = "/api/v1/diff/{id}", produces = {"application/json"})
     ResponseEntity<DiffOperationResponse> compareObjects(@PathVariable("id") UUID id,
-                                                         @RequestParam(value = "diffType", required = false, defaultValue = "MYER")
-                                                                 ComparatorType diffType)
+                                                         @RequestParam(value = "diffType", required = false, defaultValue = "MYER") ComparatorType diffType)
             throws ClientException, IOException, DiffException {
 
         return ResponseEntity.status(HttpStatus.OK).body(diffObjectComparatorService.compare(id, diffType));

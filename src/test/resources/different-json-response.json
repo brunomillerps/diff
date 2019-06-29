@@ -1,0 +1,4 @@
+{
+  "data": "--- json-base64-left.json\n+++ json-base64-right.json\n@@ -9,1 +9,1 @@\n-          \"onclick\": \"CreateNewDoc()\"\r\n+          \"onclick\": \"CreateDoc()\"\r\n@@ -12,4 +12,0 @@\n-          \"value\": \"Open\",\r\n-          \"onclick\": \"OpenDoc()\"\r\n-        },\r\n-        {\r\n@@ -18,0 +14,8 @@\n+        },\r\n+        {\r\n+          \"value\": \"About\",\r\n+          \"onclick\": \"AboutDocX()\"\r\n+        },\r\n+        {\r\n+          \"value\": \"Open\",\r\n+          \"onclick\": \"OpenDoc()\"\r",
+  "matched": false
+}

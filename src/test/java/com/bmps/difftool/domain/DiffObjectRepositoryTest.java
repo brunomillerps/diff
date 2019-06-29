@@ -2,8 +2,7 @@ package com.bmps.difftool.domain;
 
 import com.bmps.difftool.DiffProvider;
 import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,9 +25,9 @@ public class DiffObjectRepositoryTest {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void returnExceptionForNullDocumentTest() {
-        Assertions.assertThrows(NullPointerException.class, () -> repository.createOrUpdate(null));
+        repository.createOrUpdate(null);
     }
 
     @Test
