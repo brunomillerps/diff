@@ -1,26 +1,16 @@
 package com.bmps.difftool.rest;
 
-import com.bmps.difftool.DiffToolApplication;
+import com.bmps.difftool.AbstractSpringIntegrationTest;
 import com.bmps.difftool.domain.ComparatorType;
 import com.bmps.difftool.domain.DiffObject;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -31,32 +21,16 @@ import java.util.Base64;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.MOCK, classes = DiffToolApplication.class)
-@AutoConfigureWebMvc
-public class DiffControllerTest {
+public class DiffControllerIntegrationTest extends AbstractSpringIntegrationTest {
 
     private static final String API_V1_DIFF_LEFT = "/api/v1/diff/{id}/left";
     private static final String API_V1_DIFF_RIGHT = "/api/v1/diff/{id}/right";
     private static final String API_V1_DIFF = "/api/v1/diff/{id}";
-    private MockMvc mockMvc;
-
-    @Autowired
-    private WebApplicationContext ctx;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
-    @Before
-    public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
-    }
 
     @Test
     public void persistLeftContentTest() throws Exception {

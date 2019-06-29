@@ -1,29 +1,21 @@
 package com.bmps.difftool.domain;
 
+import com.bmps.difftool.AbstractSpringIntegrationTest;
 import com.bmps.difftool.DiffProvider;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class DiffObjectRepositoryTest {
+public class DiffObjectRepositoryIntegrationTest extends AbstractSpringIntegrationTest {
 
     @Autowired
     private DiffObjectRepository repository;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
     @Test(expected = NullPointerException.class)
     public void returnExceptionForNullDocumentTest() {

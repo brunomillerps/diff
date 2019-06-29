@@ -4,22 +4,22 @@ import com.bmps.difftool.domain.ComparatorType;
 import org.junit.Assert;
 import org.junit.Test;
 
-class JsonByteArrayComparatorFactoryTest {
+public class JsonByteArrayComparatorFactoryTest {
 
     @Test
-    void createJsonPatchComparatorFactoryTest() {
+    public void createJsonPatchComparatorFactoryTest() {
         JsonByteArrayComparator comparatorFactory = JsonByteArrayComparatorFactory.createComparatorFactory(ComparatorType.JSON_PATCH);
         Assert.assertEquals(JsonPatchByteArrayComparator.class.getSimpleName(), comparatorFactory.getClass().getSimpleName());
     }
 
     @Test
-    void createMyerComparatorFactoryTest() {
+    public void createMyerComparatorFactoryTest() {
         JsonByteArrayComparator comparatorFactory = JsonByteArrayComparatorFactory.createComparatorFactory(ComparatorType.MYER);
         Assert.assertEquals(MyersDiffJsonByteArrayComparator.class.getSimpleName(), comparatorFactory.getClass().getSimpleName());
     }
 
     @Test(expected = RuntimeException.class)
-    void createNullComparatorShouldThrowExceptionTest() {
+    public void createNullComparatorShouldThrowExceptionTest() {
         JsonByteArrayComparatorFactory.createComparatorFactory(null);
     }
 }

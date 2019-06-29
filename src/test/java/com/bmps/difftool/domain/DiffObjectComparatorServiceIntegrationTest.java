@@ -1,5 +1,6 @@
 package com.bmps.difftool.domain;
 
+import com.bmps.difftool.AbstractSpringIntegrationTest;
 import com.bmps.difftool.DiffProvider;
 import com.bmps.difftool.exception.ClientException;
 import com.bmps.difftool.exception.DiffObjectNotFound;
@@ -7,25 +8,16 @@ import com.bmps.difftool.rest.DiffOperationResponse;
 import com.github.difflib.algorithm.DiffException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.util.Base64;
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class DiffObjectComparatorServiceTest {
+public class DiffObjectComparatorServiceIntegrationTest extends AbstractSpringIntegrationTest {
 
     @Autowired
     private DiffObjectComparatorService diffService;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
     @Test(expected = DiffObjectNotFound.class)
     public void findDiffObjectDiffObjectNotFoundTest() throws DiffException, ClientException, IOException {

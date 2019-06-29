@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.util.Base64;
 
-class MyersDiffJsonByteArrayComparatorTest {
+public class MyersDiffJsonByteArrayComparatorTest {
 
     MyersDiffJsonByteArrayComparator myersDiffComparator = new MyersDiffJsonByteArrayComparator();
 
