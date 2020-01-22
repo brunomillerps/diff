@@ -175,6 +175,3 @@ Code quality is provided by [SonarQube](https://www.sonarqube.org/). [Check the 
 * Continuous Integration with [Travis CI](https://travis-ci.org)
 * Revisit the project structure to match a consolidated architecture (Hexagonal, Onion, DDD or Clean Architecture)
 * README Improvement with badges to code quality and tests for better visualization.
-
-
-1...2...3
