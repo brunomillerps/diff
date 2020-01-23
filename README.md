@@ -1,6 +1,7 @@
 
 <img src="https://github.com/brunomillerps/diff/blob/master/img/Diff-Files.svg">
 
+qwwe
 # JSON File Comparator
 > Compare 2 [Base64](https://en.wikipedia.org/wiki/Base64) encoded JSON data
 
